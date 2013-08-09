@@ -105,6 +105,9 @@ getSchema = do
         -- Alphanumeric.
         "alpha" -> return alphanumeric
 
+        -- Paranoiac
+        "parano" -> return paranoiac
+
         -- PIN.
         'p' : 'i' : 'n' : xs | [(n, "")] <- reads xs -> return $ pin n
 

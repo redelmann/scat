@@ -10,6 +10,7 @@ module Scat.Schemas
     -- * Passwords
     , safe
     , alphanumeric
+    , paranoiac
 
     -- * PIN
     , pin
@@ -32,6 +33,10 @@ import Paths_scat
 
 -- | Password builder.
 type Schema = Builder String
+
+-- | Paranoiac mode, entropy of 512 bits.
+paranoiac :: Schema
+paranoiac = replicateM 78 ascii
 
 {- | Generates a password of length 18,
      containing upper case letters,
