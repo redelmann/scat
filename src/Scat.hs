@@ -43,6 +43,7 @@ scat = do
     printVerbose "Generated password:\n"
     liftIO $ putStrLn $ evalBuilder s $ scatter k pw
 
+-- | Prints, if the verbosity level allows it.
 printVerbose :: String -> Scat ()
 printVerbose str = do
     v <- fmap verbose ask
@@ -77,6 +78,7 @@ getPassword = do
                 printVerbose "Passwords do not match, please retry.\n"
                 getPassConfirm
 
+-- | Ask a password on the command line, with the specified prompt.
 askPassword :: String -> Scat C.ByteString
 askPassword str = do
     printVerbose str

@@ -33,6 +33,8 @@ data Options = Options
     -- ^ Indicates if the password must be confirmed. Activates verbosity.
     }
 
+{- | Verbosity. If false, do not print anything but the generated password.
+     True when @--verbose@ or @--confirmation@ are specified. -}
 verbose :: Options -> Bool
 verbose opts = verbose_ opts || confirm opts
 
