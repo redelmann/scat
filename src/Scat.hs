@@ -71,7 +71,7 @@ getPassword = do
     getPassConfirm = do
         a <- askPassword "Password: "
         b <- askPassword "Confirm: "
-        if (a == b)
+        if a == b
             then return a
             else do
                 printVerbose "Passwords do not match, please retry.\n"
@@ -81,7 +81,7 @@ askPassword :: String -> Scat C.ByteString
 askPassword str = do
     printVerbose str
     old <- liftIO $ hGetEcho stdin
-    pw <- liftIO $ bracket_ 
+    pw <- liftIO $ bracket_
         (hSetEcho stdin False)
         (hSetEcho stdin old)
         C.getLine
