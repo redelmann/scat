@@ -3,16 +3,14 @@
 -- | Password scatterer.
 module Main (main) where
 
-import Data.Monoid
-import Data.Digest.Pure.SHA
-import Data.ByteString.Lazy (ByteString)
+import Data.ByteString (ByteString)
+import Data.ByteString (unpack)
 import qualified Data.ByteString.Char8 as C
-import qualified Data.ByteString.Lazy.Char8 as LC
-import qualified Data.ByteString.Lazy as BS
 import System.IO
 import System.Exit
 import Control.Exception
 import Control.Monad.Reader
+import Crypto.Scrypt
 
 import Scat.Schemas
 import Scat.Builder
@@ -20,7 +18,10 @@ import Scat.Options
 
 -- | Generates the seed integer given a key and a password.
 scatter :: ByteString -> ByteString -> Integer
-scatter k pw = integerDigest $ sha512 (k <> pw)
+scatter k pw = foldr (\ c s -> fromIntegral c + 256 * s) 0 $
+        unpack $ unHash $ scrypt params (Salt k) (Pass pw)
+    where
+        Just params = scryptParams 14 8 50
 
 -- | Main type of the program.
 type Scat a = ReaderT Options IO a
@@ -55,7 +56,7 @@ printVerbose str = do
 getPassword :: Scat ByteString
 getPassword = do
     mpw <- fmap password ask
-    pw <- case mpw of
+    case mpw of
         -- Ask for the password on stdin.
         Nothing -> do
             c <- fmap confirm ask
@@ -65,7 +66,6 @@ getPassword = do
 
         -- Retrieve the password from the arguments.
         Just st -> return $ C.pack st
-    return $ BS.fromChunks [pw]
   where
     getPass = askPassword "Password: "
 
@@ -92,7 +92,7 @@ askPassword str = do
 
 -- | Gets the key.
 getKey :: Scat ByteString
-getKey = fmap (LC.pack . key) ask
+getKey = fmap (C.pack . key) ask
 
 -- | Gets the schema to generate the new password.
 getSchema :: Scat Schema

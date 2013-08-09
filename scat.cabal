@@ -10,7 +10,7 @@ name:                scat
 -- PVP summary:      +-+------- breaking API changes
 --                   | | +----- non-breaking API additions
 --                   | | | +--- code changes with no API change
-version:             0.1.0.0
+version:             0.2.0.0
 
 -- A short (one-line) description of the package.
 synopsis:            Generates unique passwords for various websites from a single password.
@@ -57,5 +57,5 @@ executable scat
   other-modules:       Scat.Builder, Scat.Schemas, Scat.Options, Scat.Utils.Permutation, Paths_scat
   
   -- Other library packages from which modules are imported.
-  build-depends:       base ==4.5.*, SHA ==1.6.*, bytestring ==0.9.*, optparse-applicative ==0.5.*, mtl ==2.1.*, vector ==0.10.*
+  build-depends:       base ==4.5.*, scrypt ==0.3.*, bytestring ==0.9.*, optparse-applicative ==0.5.*, mtl ==2.1.*, vector ==0.10.*
   
