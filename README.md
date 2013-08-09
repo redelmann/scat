@@ -99,10 +99,10 @@ Name | Comments | Entropy (in bits)
 :--- | :------- | :----------------
 safe | A mix of 18 ascii symbols. (default) | 115
 alpha | A mix of 18 alphanumeric symbols. | 104
-parano | 78 ascii characters | 512
-pokemons | 4 classic Pokémons, each with a level up to 100 | 55
+parano | 78 ascii characters. | 512
+pokemons | 4 classic Pokémons, each with a level up to 100. | 55
 diceware | 5 words out of the [diceware's list][diceware]. | 65
-pinXX | `XX` digits (useful for PIN codes) | `3.3 * XX`
+pinXX | `XX` digits. (useful for PIN codes) | `3.3 * XX`
 
 ## How it works
 
