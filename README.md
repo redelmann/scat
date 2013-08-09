@@ -40,6 +40,8 @@ Confirm:
 Generated password:
 6yorHvhrpj#8Yce:bl
 ```
+The password generated for Facebook is completely different from the one it generated for GitHub.
+
 
 Imagine now that your are on an other computer, with no access to your keychain, and you would like to login to Facebook (just for 5 minutes).
 To your great despair, there is no way you can remember your obscure password!
@@ -117,6 +119,27 @@ For now, `scat` is only distributed as a Haskell source code.
 3. Run the command `cabal configure && cabal install` to install `scat`.
 
 4. Enjoy!
+
+## Contributing
+
+Feel free to contribute to this project! If you have a brilliant idea to make this project better, just say so!
+If you lack ideas but would like to participate anyway, you can also find here a list of things to do!
+
+### Things to do
+
+1. Create other schemas.
+
+2. Let the user specify a size for some schemas.
+
+3. Compatible port in mainstream programming languages.
+
+4. Some other improvements you might want!
+
+### Contributors
+
+Name | Contributions
+:--- | :------------
+Romain Edelmann | Initial work on the project.
 
 [diceware]: http://world.std.com/~reinhold/diceware.html
 [haskell-platform]: http://www.haskell.org/platform/
