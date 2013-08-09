@@ -4,6 +4,14 @@
 `scat` is a *password scatterer*. It allows the generation of unique passwords for each service,
 website, email address or account you might have, all from a single password.
 
+## Disclaimer
+
+`scat` is not the best one can achieve in security. If you are interested in a more secure system, look at [pwsafe][pwsafe] for instance.
+The system is potentially vulnerable when an attacker can gather generated keys.
+
+That being said, if you tend to reuse the same password everywhere and do not want to store all passwords in a database,
+you might be better off using `scat` than to keep using the same password or a slight variation for each website.
+
 ## Motivation
 
 Nowadays, accounts for many services such as Facebook, Twitter, Reddit, Google, Amazon, your bank account, etc. are needed.
@@ -142,5 +150,6 @@ Name | Contributions
 :--- | :------------
 Romain Edelmann | Initial work on the project.
 
+[pwsafe]: http://nsd.dyndns.org/pwsafe/
 [diceware]: http://world.std.com/~reinhold/diceware.html
 [haskell-platform]: http://www.haskell.org/platform/
