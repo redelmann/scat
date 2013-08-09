@@ -114,7 +114,7 @@ pinXX | `XX` digits. (useful for PIN codes) | `3.3 * XX`
 
 ## How it works
 
-Under the hood, `scat` will use `SHA-512`, a cryptographic hash function, to generate a huge integer seed.
+Under the hood, `scat` will use `Scrypt`, a password-based key derivation function, to generate a huge integer seed.
 This integer seed will be consumed by `scat` to generate deterministically a new password from a schema.
 
 ## Installing
