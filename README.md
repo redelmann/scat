@@ -28,7 +28,10 @@ Generated password:
 p3sz\x9vUsn{"Kjzxt
 ```
 
-Or, for a Facebook password:
+> Note that `pony1234` is **not** your github password. It's the original password you use to generate other passwords.
+> **Never share it, or use it as a password for anything else than `scat`.**
+
+Let's say that you now want to generate a Facebook password:
 
 ```
 > scat -c -k "facebook"
