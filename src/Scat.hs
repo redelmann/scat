@@ -3,6 +3,7 @@
 -- | Password scatterer.
 module Main (main) where
 
+import Data.Monoid
 import Data.ByteString (ByteString)
 import Data.ByteString (unpack)
 import qualified Data.ByteString.Char8 as C
@@ -17,9 +18,9 @@ import Scat.Builder
 import Scat.Options
 
 -- | Generates the seed integer given a key and a password.
-scatter :: ByteString -> ByteString -> Integer
-scatter k pw = foldr (\ c s -> fromIntegral c + 256 * s) 0 $
-        unpack $ unHash $ scrypt params (Salt k) (Pass pw)
+scatter :: ByteString -> ByteString -> ByteString -> Integer
+scatter k pw c = foldr (\ n s -> fromIntegral n + 256 * s) 0 $
+        unpack $ unHash $ scrypt params (Salt k) (Pass $ pw <> c)
     where
         Just params = scryptParams 14 8 50
 
@@ -41,8 +42,9 @@ scat = do
     k  <- getKey
     s  <- getSchema
     pw <- getPassword
+    c  <- getCode
     printVerbose "Generated password:\n"
-    liftIO $ putStrLn $ evalBuilder s $ scatter k pw
+    liftIO $ putStrLn $ evalBuilder s $ scatter k pw c
 
 -- | Prints, if the verbosity level allows it.
 printVerbose :: String -> Scat ()
@@ -67,11 +69,11 @@ getPassword = do
         -- Retrieve the password from the arguments.
         Just st -> return $ C.pack st
   where
-    getPass = askPassword "Password: "
+    getPass = askPassword False "Password: "
 
     getPassConfirm = do
-        a <- askPassword "Password: "
-        b <- askPassword "Confirm: "
+        a <- askPassword False "Password: "
+        b <- askPassword False "Confirm: "
         if a == b
             then return a
             else do
@@ -79,20 +81,32 @@ getPassword = do
                 getPassConfirm
 
 -- | Ask a password on the command line, with the specified prompt.
-askPassword :: String -> Scat C.ByteString
-askPassword str = do
+askPassword :: Bool -> String -> Scat ByteString
+askPassword echo str = do
     printVerbose str
     old <- liftIO $ hGetEcho stdin
     pw <- liftIO $ bracket_
-        (hSetEcho stdin False)
+        (hSetEcho stdin echo)
         (hSetEcho stdin old)
         C.getLine
-    printVerbose "\n"
+    unless echo $ printVerbose "\n"
     return pw
 
 -- | Gets the key.
 getKey :: Scat ByteString
 getKey = fmap (C.pack . key) ask
+
+-- | Gets the code.
+getCode :: Scat ByteString
+getCode = do
+    uc <- fmap useCode ask
+    if uc
+        then do
+            mc <- fmap code ask
+            case mc of
+                Just st -> return $ C.pack st
+                Nothing -> askPassword True "Code: "
+        else return ""
 
 -- | Gets the schema to generate the new password.
 getSchema :: Scat Schema

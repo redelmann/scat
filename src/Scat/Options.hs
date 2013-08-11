@@ -8,6 +8,8 @@ module Scat.Options
     -- * Accessors
     , password
     , key
+    , useCode
+    , code
     , schema
     , verbose
     , confirm
@@ -17,6 +19,7 @@ module Scat.Options
     ) where
 
 import Data.Monoid
+import Data.Maybe (isJust)
 import Options.Applicative
 
 -- | All program options.
@@ -25,6 +28,10 @@ data Options = Options
     -- ^ Password, optionally provided.
     , key      :: String
     -- ^ Key or category for the password.
+    , useCode_ :: Bool
+    -- ^ Indicates if extra code should be used.
+    , code     :: Maybe String
+    -- ^ Extra code. Activates code usage.
     , schema   :: String
     -- ^ Name of the schema to use.
     , verbose_ :: Bool
@@ -32,6 +39,10 @@ data Options = Options
     , confirm  :: Bool
     -- ^ Indicates if the password must be confirmed. Activates verbosity.
     }
+
+-- | Indicates if extra code should be used.
+useCode :: Options -> Bool
+useCode opts = useCode_ opts || isJust (code opts)
 
 {- | Verbosity. If false, do not print anything but the generated password.
      True when @--verbose@ or @--confirmation@ are specified. -}
@@ -60,6 +71,14 @@ options = Options
         <> long "key"
         <> help "Key associated (website, email address, ...) (mandatory)"
         <> metavar "KEY")
+    <*> switch
+          (short 'x'
+        <> long "extra"
+        <> help "Indicates extra code should be used.")
+    <*> optional
+          (strOption (long "code"
+        <> help "Extra code."
+        <> metavar "CODE"))
     <*> strOption
           (short 's'
         <> long "schema"
