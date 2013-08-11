@@ -31,6 +31,12 @@ author:              Romain Edelmann
 -- patches.
 maintainer:          romain.edelmann@gmail.com
 
+homepage:            https://github.com/redelmann/scat
+
+bug-reports:         https://github.com/redelmann/scat/issues
+
+stability:           experimental
+
 -- A copyright notice.
 -- copyright:           
 
