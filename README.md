@@ -76,7 +76,7 @@ For 25 consecutive rounds, throw the two dice, lookup the result in the table be
 You may want to put a dash between the various results, or any other separator, to increase readability.
 
 Die 1 | Die 2 | Result | | Die 1 | Die 2 | Result | | Die 1 | Die 2 | Result
-:---: | :---: | :----: | | :---: | :---: | :----: | | :---: | :---: | :----:
+:---: | :---: | :----: |-| :---: | :---: | :----: |-| :---: | :---: | :----:
 1     | 1     | 1      | | 3     | 1     | C      | | 5     | 1     | O
 1     | 2     | 2      | | 3     | 2     | D      | | 5     | 2     | P
 1     | 3     | 3      | | 3     | 3     | E      | | 5     | 3     | Q
