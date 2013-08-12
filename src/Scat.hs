@@ -9,6 +9,7 @@ import Data.ByteString (unpack)
 import qualified Data.ByteString.Char8 as C
 import System.IO
 import System.Exit
+import System.Console.ANSI
 import Control.Exception
 import Control.Monad.Reader
 import Crypto.Scrypt
@@ -17,19 +18,34 @@ import Scat.Schemas
 import Scat.Builder
 import Scat.Options
 
--- | Generates the seed integer given a key and a password.
+-- | Generates the seed integer given a service, a password and a code.
 scatter :: ByteString -> ByteString -> ByteString -> Integer
 scatter k pw c = foldr (\ n s -> fromIntegral n + 256 * s) 0 $
-        unpack $ unHash $ scrypt params (Salt k) (Pass $ pw <> c)
-    where
-        Just params = scryptParams 14 8 50
+    unpack $ unHash $ scrypt params (Salt k) (Pass $ pw <> c)
+  where
+    Just params = scryptParams 14 8 50
 
 -- | Main type of the program.
 type Scat a = ReaderT Options IO a
 
+-- | Input visibility.
+data Visibility = Shown | Hidden | Erased
+
+-- | Should the input be echoed?
+shouldShow :: Visibility -> Bool
+shouldShow Shown  = True
+shouldShow Hidden = False
+shouldShow Erased = True
+
+-- | Should the input be erased afterwards?
+shouldErase :: Visibility -> Bool
+shouldErase Shown  = False
+shouldErase Hidden = False
+shouldErase Erased = True 
+
 {- | Generates a password, given a input password,
-     a key (category, website, etc.),
-     and a password `Schema`.
+     a service name (category, website, etc.),
+     a code, and a password `Schema`.
 
      The parameters are specified as command line arguments.
      The password can be read from @stdin@ if not already provided. -}
@@ -39,7 +55,7 @@ main = getOptions >>= runReaderT scat
 -- | Main program.
 scat :: Scat ()
 scat = do
-    k  <- getKey
+    k  <- getService
     s  <- getSchema
     pw <- getPassword
     c  <- getCode
@@ -69,32 +85,41 @@ getPassword = do
         -- Retrieve the password from the arguments.
         Just st -> return $ C.pack st
   where
-    getPass = askPassword False "Password: "
+    getPass = prompt Hidden "Password: "
 
     getPassConfirm = do
-        a <- askPassword False "Password: "
-        b <- askPassword False "Confirm: "
+        a <- prompt Hidden "Password: "
+        b <- prompt Hidden "Confirm: "
         if a == b
             then return a
             else do
                 printVerbose "Passwords do not match, please retry.\n"
                 getPassConfirm
 
--- | Ask a password on the command line, with the specified prompt.
-askPassword :: Bool -> String -> Scat ByteString
-askPassword echo str = do
+-- | Ask a for input on the command line, with the specified prompt.
+prompt :: Visibility -> String -> Scat ByteString
+prompt vis str = do
     printVerbose str
     old <- liftIO $ hGetEcho stdin
     pw <- liftIO $ bracket_
-        (hSetEcho stdin echo)
+        (hSetEcho stdin $ shouldShow vis)
         (hSetEcho stdin old)
         C.getLine
-    unless echo $ printVerbose "\n"
+    when (shouldErase vis) $ liftIO $ do
+        cursorUpLine 1
+        cursorForward $ length str
+        clearFromCursorToScreenEnd
+        cursorDownLine 1
+    unless (shouldShow vis) $ printVerbose "\n"
     return pw
 
--- | Gets the key.
-getKey :: Scat ByteString
-getKey = fmap (C.pack . key) ask
+-- | Gets the service.
+getService :: Scat ByteString
+getService = do
+    mk <- fmap service ask
+    case mk of
+        Just k -> return $ C.pack k
+        Nothing -> prompt Shown "Service: "
 
 -- | Gets the code.
 getCode :: Scat ByteString
@@ -105,7 +130,7 @@ getCode = do
             mc <- fmap code ask
             case mc of
                 Just st -> return $ C.pack st
-                Nothing -> askPassword True "Code: "
+                Nothing -> prompt Erased "Code: "
         else return ""
 
 -- | Gets the schema to generate the new password.

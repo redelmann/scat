@@ -7,7 +7,7 @@ module Scat.Options
 
     -- * Accessors
     , password
-    , key
+    , service
     , useCode
     , code
     , schema
@@ -19,35 +19,25 @@ module Scat.Options
     ) where
 
 import Data.Monoid
-import Data.Maybe (isJust)
 import Options.Applicative
 
 -- | All program options.
 data Options = Options
     { password :: Maybe String
     -- ^ Password, optionally provided.
-    , key      :: String
-    -- ^ Key or category for the password.
-    , useCode_ :: Bool
+    , service  :: Maybe String
+    -- ^ Service for which to generate the password.
+    , useCode  :: Bool
     -- ^ Indicates if extra code should be used.
     , code     :: Maybe String
-    -- ^ Extra code. Activates code usage.
+    -- ^ Extra code.
     , schema   :: String
     -- ^ Name of the schema to use.
-    , verbose_ :: Bool
+    , verbose  :: Bool
     -- ^ Verbosity. If false, do not print anything but the generated password.
     , confirm  :: Bool
-    -- ^ Indicates if the password must be confirmed. Activates verbosity.
+    -- ^ Indicates if the password must be confirmed.
     }
-
--- | Indicates if extra code should be used.
-useCode :: Options -> Bool
-useCode opts = useCode_ opts || isJust (code opts)
-
-{- | Verbosity. If false, do not print anything but the generated password.
-     True when @--verbose@ or @--confirmation@ are specified. -}
-verbose :: Options -> Bool
-verbose opts = verbose_ opts || confirm opts
 
 -- | Parses the arguments from the command line.
 getOptions :: IO Options
@@ -55,7 +45,7 @@ getOptions = execParser opts
   where
     opts = info (helper <*> options)
         (fullDesc
-        <> progDesc "Safely generate passwords derived from a unique password."
+        <> progDesc "Safely generate passwords derived from a unique password and code."
         <> header "scat - a password scatterer")
 
 -- | Option parser.
@@ -66,18 +56,18 @@ options = Options
         <> long "password"
         <> help "The password"
         <> metavar "PASSWORD"))
-    <*> strOption
-          (short 'k'
-        <> long "key"
-        <> help "Key associated (website, email address, ...) (mandatory)"
-        <> metavar "KEY")
-    <*> switch
-          (short 'x'
-        <> long "extra"
-        <> help "Indicates extra code should be used.")
+    <*> optional (strOption
+          (short 'S'
+        <> long "service"
+        <> help "Service associated (website, email address, ...)"
+        <> metavar "SERVICE"))
+    <*> flag True False
+          (long "nocode"
+        <> help "Indicates that extra code should be not be used")
     <*> optional
-          (strOption (long "code"
-        <> help "Extra code."
+          (strOption (short 'x'
+        <> long "code"
+        <> help "The extra code to use"
         <> metavar "CODE"))
     <*> strOption
           (short 's'
@@ -86,10 +76,9 @@ options = Options
         <> metavar "SCHEMA"
         <> value "safe"
         <> showDefault)
-    <*> switch
-          (short 'v'
-        <> long "verbose"
-        <> help "Prints instructions and information")
+    <*> flag True False
+          (long "silent"
+        <> help "Do not print anything but the generated password")
     <*> switch
           (short 'c'
         <> long "confirmation"
