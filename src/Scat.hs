@@ -105,7 +105,8 @@ prompt vis str = do
         (hSetEcho stdin $ shouldShow vis)
         (hSetEcho stdin old)
         C.getLine
-    when (shouldErase vis) $ liftIO $ do
+    v <- fmap verbose ask
+    when (shouldErase vis && v) $ liftIO $ do
         cursorUpLine 1
         cursorForward $ length str
         clearFromCursorToScreenEnd
