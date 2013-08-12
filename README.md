@@ -1,4 +1,3 @@
-
 # scat
 
 `scat` is a *password scatterer*. It allows the generation of unique passwords for each service,
@@ -75,20 +74,21 @@ For this, all you need is two dice that you can differentiate (one red and the o
 For 25 consecutive rounds, throw the two dice, lookup the result in the table below and report it on the piece of paper.
 You may want to put a dash between the various results, or any other separator, to increase readability.
 
-Die 1 | Die 2 | Result |   | Die 1 | Die 2 | Result |   | Die 1 | Die 2 | Result
-:---: | :---: | :----: | - | :---: | :---: | :----: | - | :---: | :---: | :----:
-1     | 1     | 1      |   | 3     | 1     | C      |   | 5     | 1     | O
-1     | 2     | 2      |   | 3     | 2     | D      |   | 5     | 2     | P
-1     | 3     | 3      |   | 3     | 3     | E      |   | 5     | 3     | Q
-1     | 4     | 4      |   | 3     | 4     | F      |   | 5     | 4     | R
-1     | 5     | 5      |   | 3     | 5     | G      |   | 5     | 5     | S
-1     | 6     | 6      |   | 3     | 6     | H      |   | 5     | 6     | T
-2     | 1     | 7      |   | 4     | 1     | I      |   | 6     | 1     | U
-2     | 2     | 8      |   | 4     | 2     | J      |   | 6     | 2     | V
-2     | 3     | 9      |   | 4     | 3     | K      |   | 6     | 3     | W
-2     | 4     | 0      |   | 4     | 4     | L      |   | 6     | 4     | X
-2     | 5     | A      |   | 4     | 5     | M      |   | 6     | 5     | Y
-2     | 6     | B      |   | 4     | 6     | N      |   | 6     | 6     | Z
+
+Die 1 | Die 2 | Result |     | Die 1 | Die 2 | Result |     | Die 1 | Die 2 | Result
+:---: | :---: | :----: | :-: | :---: | :---: | :----: | :-: | :---: | :---: | :----:
+1     | 1     | 1      |     | 3     | 1     | C      |     | 5     | 1     | O
+1     | 2     | 2      |     | 3     | 2     | D      |     | 5     | 2     | P
+1     | 3     | 3      |     | 3     | 3     | E      |     | 5     | 3     | Q
+1     | 4     | 4      |     | 3     | 4     | F      |     | 5     | 4     | R
+1     | 5     | 5      |     | 3     | 5     | G      |     | 5     | 5     | S
+1     | 6     | 6      |     | 3     | 6     | H      |     | 5     | 6     | T
+2     | 1     | 7      |     | 4     | 1     | I      |     | 6     | 1     | U
+2     | 2     | 8      |     | 4     | 2     | J      |     | 6     | 2     | V
+2     | 3     | 9      |     | 4     | 3     | K      |     | 6     | 3     | W
+2     | 4     | 0      |     | 4     | 4     | L      |     | 6     | 4     | X
+2     | 5     | A      |     | 4     | 5     | M      |     | 6     | 5     | Y
+2     | 6     | B      |     | 4     | 6     | N      |     | 6     | 6     | Z
 
 Yet another solution would be to get a set of cards (a deck of 32 cards is sufficient). Shuffle it for some time, and then shuffle it again, just to be sure. Get a piece of paper and note down the order of the cards, using an abreviation for each card. For instance, you can use `KS` for for the King of Spades and `10H` for the 10 of Heart. You can now either keep the piece of paper securely with you, or keep your set of cards in the same order always in your bag and starting over when you need the code!
 
