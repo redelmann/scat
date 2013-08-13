@@ -153,13 +153,13 @@ This integer seed will be consumed by `scat` to generate deterministically a new
 
 ## Installing
 
-For now, `scat` is only distributed as a Haskell source code. 
+`scat` is freely available on [Hackage][hackage]. 
 
 1. If you do not have Haskell and Cabal installed, please visit [the Haskell website and download the Haskell platform][haskell-platform].
 
-2. Once this is done, download the `scat` code and place yourself in the root directory of the project (in which you should find a file named `snap.cabal`).
+2. Update the list of cabal packages, by entering `cabal update`.
 
-3. Run the command `cabal configure && cabal install` to install `scat`.
+3. Run the command `cabal install scat`.
 
 4. Enjoy!
 
@@ -184,6 +184,7 @@ Name | Contributions
 :--- | :------------
 Romain Edelmann | Initial work on the project.
 
+[hackage]: http://hackage.haskell.org/package/scat
 [yubico-key]: http://www.yubico.com/products/yubikey-hardware/
 [yubico-static]: http://www.yubico.com/products/services-software/personalization-tools/static-password/
 [pwsafe]: http://nsd.dyndns.org/pwsafe/
