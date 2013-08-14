@@ -13,6 +13,7 @@ module Scat.Options
     , schema
     , verbose
     , confirm
+    , ansi
 
     -- * Execution
     , getOptions
@@ -37,6 +38,8 @@ data Options = Options
     -- ^ Verbosity. If false, do not print anything but the generated password.
     , confirm  :: Bool
     -- ^ Indicates if the password must be confirmed.
+    , ansi     :: Bool
+    -- ^ Indicates if ANSI escape sequences can be used.
     }
 
 -- | Parses the arguments from the command line.
@@ -45,7 +48,9 @@ getOptions = execParser opts
   where
     opts = info (helper <*> options)
         (fullDesc
-        <> progDesc "Safely generate passwords derived from a unique password and code."
+        <> progDesc (unwords
+            [ "Safely generate passwords derived "
+            , "from a unique password and code." ])
         <> header "scat - a password scatterer")
 
 -- | Option parser.
@@ -83,3 +88,6 @@ options = Options
           (short 'c'
         <> long "confirmation"
         <> help "Asks for password confirmation")
+    <*> flag True False
+          (long "noansi"
+        <> help "Do not use ANSI escape sequences to format output")
