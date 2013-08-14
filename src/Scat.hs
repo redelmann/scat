@@ -4,8 +4,7 @@
 module Main (main) where
 
 import Data.Monoid
-import Data.ByteString (ByteString)
-import Data.ByteString (unpack)
+import Data.ByteString (ByteString, unpack)
 import qualified Data.ByteString.Char8 as C
 import System.IO
 import System.Exit
@@ -41,7 +40,7 @@ shouldShow Erased = True
 shouldErase :: Visibility -> Bool
 shouldErase Shown  = False
 shouldErase Hidden = False
-shouldErase Erased = True 
+shouldErase Erased = True
 
 {- | Generates a password, given a input password,
      a service name (category, website, etc.),
@@ -60,7 +59,19 @@ scat = do
     pw <- getPassword
     c  <- getCode
     printVerbose "Generated password:\n"
-    liftIO $ putStrLn $ evalBuilder s $ scatter k pw c
+    showGenerated $ evalBuilder s $ scatter k pw c
+
+-- | Prints out the generated password.
+showGenerated :: String -> Scat ()
+showGenerated gen = do
+    v <- fmap verbose ask
+    a <- fmap ansi ask
+    let ok = v && a
+    liftIO $ do
+        when ok $ setSGR [SetSwapForegroundBackground True]
+        putStrLn gen
+        when ok $ setSGR [SetSwapForegroundBackground False]
+
 
 -- | Prints, if the verbosity level allows it.
 printVerbose :: String -> Scat ()
@@ -106,7 +117,8 @@ prompt vis str = do
         (hSetEcho stdin old)
         C.getLine
     v <- fmap verbose ask
-    when (shouldErase vis && v) $ liftIO $ do
+    a <- fmap ansi ask
+    when (shouldErase vis && a && v) $ liftIO $ do
         cursorUpLine 1
         cursorForward $ length str
         clearFromCursorToScreenEnd
@@ -150,6 +162,16 @@ getSchema = do
 
         -- PIN.
         'p' : 'i' : 'n' : xs | [(n, "")] <- reads xs -> return $ pin n
+
+        -- PIN with default size.
+        "pin" -> return $ pin 6
+
+        -- Pattern lock
+        'l' : 'o' : 'c' : 'k' : xs | [(n, "")] <- reads xs -> return $
+            androidPatternLock n
+
+        -- Default size of pattern lock
+        "lock" -> return $ androidPatternLock 9
 
         -- Passphrase using Diceware's list.
         "diceware" -> liftIO diceware
