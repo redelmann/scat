@@ -131,20 +131,22 @@ Or, if you prefer Pokémons:
 > scat -c -S "facebook" -s pokemons
 Password:
 Confirm:
+Code: AGDE2-DGXA4-33DLQ-WEDAP-GYPQ9
 Generated password:
 Snorlax 5, Weedle 35, Raichu 27, Alakazam 99
 ```
 
 ### Summary of available schemas
 
-Name | Comments | Entropy (in bits)
-:--- | :------- | :----------------
-safe | A mix of 18 ascii symbols. (default) | 115
-alpha | A mix of 18 alphanumeric symbols. | 104
-parano | 78 ascii characters. | 512
+Name     | Comments                                         | Entropy (in bits)
+:------- | :----------------------------------------------- | :----------------
+safe     | A mix of 18 ascii symbols. (default)             | 115
+alpha    | A mix of 18 alphanumeric symbols.                | 104
+parano   | 78 ascii characters.                             | 512
 pokemons | 4 classic Pokémons, each with a level up to 100. | 55
-diceware | 5 words out of the [diceware's list][diceware]. | 65
-pinXX | `XX` digits. (useful for PIN codes) | `3.3 * XX`
+diceware | 5 words out of the [diceware's list][diceware].  | 65
+pinXX    | `XX` digits. (useful for PIN codes)              | `3.3 * XX`
+lockX    | Android lockscreen pattern of length `X`         | < 19
 
 ## How it works
 
