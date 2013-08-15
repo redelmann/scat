@@ -59,7 +59,8 @@ scat = do
     pw <- getPassword
     c  <- getCode
     printVerbose "Generated password:\n"
-    showGenerated $ evalBuilder s $ scatter k pw c
+    ms <- fmap size ask
+    showGenerated $ evalBuilder (getBuilder s ms) $ scatter k pw c
 
 -- | Prints out the generated password.
 showGenerated :: String -> Scat ()
@@ -161,17 +162,10 @@ getSchema = do
         "parano" -> return paranoiac
 
         -- PIN.
-        'p' : 'i' : 'n' : xs | [(n, "")] <- reads xs -> return $ pin n
-
-        -- PIN with default size.
-        "pin" -> return $ pin 6
+        "pin" -> return pin
 
         -- Pattern lock
-        'l' : 'o' : 'c' : 'k' : xs | [(n, "")] <- reads xs -> return $
-            androidPatternLock n
-
-        -- Default size of pattern lock
-        "lock" -> return $ androidPatternLock 9
+        "lock" -> return androidPatternLock
 
         -- Passphrase using Diceware's list.
         "diceware" -> liftIO diceware

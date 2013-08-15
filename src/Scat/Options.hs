@@ -11,6 +11,7 @@ module Scat.Options
     , useCode
     , code
     , schema
+    , size
     , verbose
     , confirm
     , ansi
@@ -34,6 +35,8 @@ data Options = Options
     -- ^ Extra code.
     , schema   :: String
     -- ^ Name of the schema to use.
+    , size     :: Maybe Int
+    -- ^ Size parameter of the schema.
     , verbose  :: Bool
     -- ^ Verbosity. If false, do not print anything but the generated password.
     , confirm  :: Bool
@@ -81,6 +84,11 @@ options = Options
         <> metavar "SCHEMA"
         <> value "safe"
         <> showDefault)
+    <*> optional (option
+          (short 'n'
+        <> long "size"
+        <> help "Size parameter"
+        <> metavar "SIZE"))
     <*> flag True False
           (long "silent"
         <> help "Do not print anything but the generated password")

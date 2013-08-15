@@ -7,22 +7,31 @@ module Scat.Schemas
     -- * Type
       Schema
 
-    -- * Passwords
+    -- ** Constructors
+    , withDefaultSize
+    , ignoreSize
+
+    -- ** Destructor
+    , getBuilder
+
+    -- * Built-in schemas
+    -- ** Passwords
     , safe
     , alphanumeric
     , paranoiac
 
-    -- * PIN
+    -- ** PIN
     , pin
 
-    -- * Pass phrases
+    -- ** Pass phrases
     , pokemons
     , diceware
 
-    -- * Pattern lock
+    -- ** Pattern lock
     , androidPatternLock
     ) where
 
+import Data.Ratio ((%))
 import Data.List (intercalate, (\\))
 import Data.Vector (Vector)
 import qualified Data.Vector as V
@@ -35,39 +44,60 @@ import Scat.Builder
 import Paths_scat
 
 -- | Password builder.
-type Schema = Builder String
+data Schema = Schema
+    { defaultSize :: Int
+    , builder     :: Int -> Builder String }
 
--- | Paranoiac mode, entropy of 512 bits.
+-- | Returns a `Builder` given an optional size.
+getBuilder :: Schema -> Maybe Int -> Builder String
+getBuilder schema Nothing  = builder schema $ defaultSize schema
+getBuilder schema (Just s) = builder schema s
+
+-- | Specifies the Schema will not be sensible to any size parameter.
+ignoreSize :: Builder String -> Schema
+ignoreSize = Schema undefined . const
+
+-- | Specifies the Schema accepts a size parameter.
+withDefaultSize :: Int -> (Int -> Builder String) -> Schema
+withDefaultSize = Schema
+
+-- | Paranoiac mode, entropy of 512 bits with the default size of 78.
 paranoiac :: Schema
-paranoiac = replicateM 78 ascii
+paranoiac = withDefaultSize 78 $ \ s -> replicateM s ascii
 
-{- | Generates a password of length 18,
+{- | Generates a password,
      containing upper case letters,
      lower case letters,
      digits and symbols.
-     Entropy of about 115 bits. -}
+     Entropy of about 115 bits for length 18. -}
 safe :: Schema
-safe = do
-    nUpper <- inRange (2, 5)
-    nDigit <- inRange (2, 5)
-    nSpecial <- inRange (2, 5)
-    let nLower = 18 - nUpper - nSpecial - nDigit
+safe = withDefaultSize 18 $ \ s -> do
+    let number = max s 4
+        lBound = max 1 $ floor $ number % 8
+        uBound = ceiling $ number % 4
+    nUpper <- inRange (lBound, uBound)
+    nDigit <- inRange (lBound, uBound)
+    nSpecial <- inRange (lBound, uBound)
+    let nLower = number - nUpper - nSpecial - nDigit
     uppers <- replicateM nUpper upper
     digits <- replicateM nDigit digit
     specials <- replicateM nSpecial special
     lowers <- replicateM nLower lower
     shuffle (uppers <> digits <> specials <> lowers)
 
-{- | Generates a password of length 18,
+{- | Generates a password,
      containing upper case letters,
      lower case letters and
      digits, but no symbols.
-     Entropy of about 104.2 bits. -}
+     Entropy of about 104.2 bits for length 18. -}
 alphanumeric :: Schema
-alphanumeric = do
-    nUpper <- inRange (2, 5)
-    nDigit <- inRange (2, 5)
-    let nLower = 18 - nUpper - nDigit
+alphanumeric = withDefaultSize 18 $ \ s -> do
+    let number = max s 4
+        lBound = max 1 $ floor $ number % 8
+        uBound = ceiling $ number % 4
+    nUpper <- inRange (lBound, uBound)
+    nDigit <- inRange (lBound, uBound)
+    let nLower = number - nUpper - nDigit
     uppers <- replicateM nUpper upper
     digits <- replicateM nDigit digit
     lowers <- replicateM nLower lower
@@ -75,14 +105,13 @@ alphanumeric = do
 
 {- | Generates a PIN number, of length `n`.
      Entropy of about @3.32 * n@ bits. -}
-pin :: Int -> Schema
-pin n = replicateM n digit
+pin :: Schema
+pin = withDefaultSize 6 $ \ s -> replicateM s digit
 
-
--- | Generates an Android lock pattern, of specified length.
-androidPatternLock :: Int -> Schema
-androidPatternLock number = do
-    xs <- loop (min number (height * width)) []
+-- | Generates an Android lock pattern.
+androidPatternLock :: Schema
+androidPatternLock = withDefaultSize 9 $ \ s -> do
+    xs <- loop (min s (height * width)) []
     return $ intercalate " - " $ map showPosition xs
   where
     -- Gets `n` points.
@@ -133,25 +162,27 @@ androidPatternLock number = do
         vstep = vdiff `div` steps
         hstep = hdiff `div` steps
 
-{- | Generates a password with 4 of the original Pokemons and their level.
-     Entropy of about 55.5 bits. -}
+{- | Generates a password with `s` of the original Pokemons and their level.
+     Entropy of about 55.5 bits for 4 pokemons. -}
 pokemons :: IO Schema
-pokemons = fromFile "pokemons.txt" $ \ vect -> do
-    ps <- replicateM 4 $ oneOfV vect
-    ls <- replicateM 4 $ inRange (1, 100 :: Int)
-    let ss = zipWith (\ p l -> p ++ " " ++ show l) ps ls
-    return $ intercalate ", " ss
+pokemons = fromFile "pokemons.txt" $ \ vect -> 
+    withDefaultSize 4 $ \ s -> do
+        ps <- replicateM s $ oneOfV vect
+        ls <- replicateM s $ inRange (1, 100 :: Int)
+        let ss = zipWith (\ p l -> p ++ " " ++ show l) ps ls
+        return $ intercalate ", " ss
 
-{- | Generates a password with 5 words
+{- | Generates a password with `s` words
      from the Diceware list.
-     Entropy of about 64.6 bits. -}
+     Entropy of about 64.6 bits for 5 words. -}
 diceware :: IO Schema
-diceware = fromFile "diceware.txt" $ \ vect -> do
-        ws <- replicateM 5 $ oneOfV vect
+diceware = fromFile "diceware.txt" $ \ vect ->
+    withDefaultSize 5 $ \ s -> do
+        ws <- replicateM s $ oneOfV vect
         return $ unwords ws
 
--- | Feeds all lines of a file to a builder.
-fromFile :: FilePath -> (Vector String -> Builder a) -> IO (Builder a)
+-- | Feeds all lines of a file to a function and gets the result.
+fromFile :: FilePath -> (Vector String -> a) -> IO a
 fromFile fp bs = do
     fp' <- getDataFileName fp
     withFile fp' ReadMode $ \ h -> do
