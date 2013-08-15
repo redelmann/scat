@@ -142,8 +142,8 @@ The schema can also have their size specified using the `-n` option. Complete in
 
 ### Summary of available schemas
 
-Name     | Comments                                           | Default `n` | Entropy for default `n` (in bits)
-:------- | :------------------------------------------------- | :---------: | :--------------------------------
+Name     | Comments                                           | Default `n` | Default entropy (in bits)
+:------- | :------------------------------------------------- | :---------: | :-----------------------:
 safe     | A mix of `n` ascii symbols. (default)              | 18          | 115
 alpha    | A mix of `n` alphanumeric symbols.                 | 18          | 104
 parano   | `n` ascii characters.                              | 78          | 512
