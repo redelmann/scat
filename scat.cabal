@@ -57,14 +57,14 @@ source-repository head
 
 executable scat
   -- .hs or .lhs file containing the Main module.
-  main-is: Scat.hs
+  main-is: Main.hs
 
   ghc-options: -Wall -O3
 
   hs-source-dirs: src
 
   -- Modules included in this executable, other than Main.
-  other-modules:       Scat.Builder, Scat.Schemas, Scat.Options, Scat.Utils.Permutation, Paths_scat
+  other-modules:       Scat, Scat.Builder, Scat.Schemas, Scat.Options, Scat.Utils.Permutation, Paths_scat
 
   -- Other library packages from which modules are imported.
   build-depends:       base >=4.5 && <5
@@ -75,3 +75,14 @@ executable scat
                      , vector == 0.10.*
                      , ansi-terminal >= 0.6.1
 
+test-suite scat-tests
+  type:       exitcode-stdio-1.0
+  main-is:    Tests.hs
+  hs-source-dirs: src
+  build-depends:       base >=4.5 && <5
+                     , scrypt == 0.5.*
+                     , bytestring
+                     , optparse-applicative >= 0.5
+                     , mtl
+                     , vector == 0.10.*
+                     , ansi-terminal >= 0.6.1
