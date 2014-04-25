@@ -54,8 +54,8 @@ main = getOptions >>= runReaderT scat
 -- | Main program.
 scat :: Scat ()
 scat = do
-    k  <- getService
     s  <- getSchema
+    k  <- getService
     pw <- getPassword
     c  <- getCode
     printVerbose "Generated password:\n"
@@ -147,33 +147,24 @@ getCode = do
                 Nothing -> prompt Erased "Code: "
         else return ""
 
+
+-- | Lists all the available schemas.
+schemas :: [(String, Scat Schema)]
+schemas =
+    [ ("safe", return safe)
+    , ("alpha", return alphanumeric)
+    , ("parano", return paranoiac)
+    , ("pin", return pin)
+    , ("lock", return androidPatternLock)
+    , ("diceware", liftIO diceware)
+    , ("pokemons", liftIO pokemons) ]
+
 -- | Gets the schema to generate the new password.
 getSchema :: Scat Schema
 getSchema = do
     name <- fmap schema ask
-    case name of
-        -- Safe, the default.
-        "safe"  -> return safe
-
-        -- Alphanumeric.
-        "alpha" -> return alphanumeric
-
-        -- Paranoiac
-        "parano" -> return paranoiac
-
-        -- PIN.
-        "pin" -> return pin
-
-        -- Pattern lock
-        "lock" -> return androidPatternLock
-
-        -- Passphrase using Diceware's list.
-        "diceware" -> liftIO diceware
-
-        -- Passphrase using Pokemons.
-        "pokemons" -> liftIO pokemons
-
-        -- Unkown.
-        _ -> liftIO $ do
+    case lookup name schemas of
+        Just s -> s
+        Nothing -> liftIO $ do
             hPutStrLn stderr "Error: Unknown schema"
             exitFailure
