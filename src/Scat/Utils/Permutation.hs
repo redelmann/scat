@@ -25,17 +25,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Retrieved from: http://en.literateprograms.org/Kth_permutation_(Haskell)?oldid=16316
 -}
 
-{- | Permutations, taken from the
+{- | Permutations, adapted from the
      http://en.literateprograms.org/Kth_permutation_(Haskell) webpage. -}
 module Scat.Utils.Permutation (perm) where
 
-rr :: Int -> Int -> [Int]
+rr :: Integer -> Integer -> [Integer]
 rr 0 _ = []
-rr n k = k `mod` n : rr (n - 1) (k `div` n)
+rr n k = m : rr (n - 1) d
+  where
+    (d, m) = k `divMod` n
 
-dfr :: [Int] -> [Int]
-dfr = foldr (\ x rs -> x : [r + (if x <= r then 1 else 0) | r <- rs]) []
+dfr :: [Integer] -> [Integer]
+dfr = foldr (\ x rs -> x : [r + if x <= r then 1 else 0 | r <- rs]) []
 
 -- | List permutation.
-perm :: [a] -> Int -> [a]
-perm xs k = [xs !! i | i <- dfr (rr (length xs) k)]
+perm :: [a] -> Integer -> [a]
+perm xs k = [xs !! fromInteger i | i <- dfr (rr (fromIntegral $ length xs) k)]

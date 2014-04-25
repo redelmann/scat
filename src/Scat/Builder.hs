@@ -125,7 +125,7 @@ useup b = Builder $ \ n ->
 
 -- | Shuffles the input list.
 shuffle :: [a] -> Builder [a]
-shuffle xs = fmap (perm xs) $ lessThan $ fact $ length xs
+shuffle xs = fmap (perm xs) $ lessThan $ fact $ fromIntegral $ length xs
   where
-    fact :: Int -> Int
+    fact :: Integer -> Integer
     fact n = product [1 .. n]
