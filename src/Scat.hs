@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, PatternGuards #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 -- | Password scatterer.
 module Main (main) where
@@ -148,7 +148,7 @@ getCode = do
         else return ""
 
 
--- | Lists all the available schemas.
+-- | Lists all the available schemas.
 schemas :: [(String, Scat Schema)]
 schemas =
     [ ("safe", return safe)

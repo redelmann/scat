@@ -63,7 +63,7 @@ instance Applicative Builder where
     pure x = Builder (\ n -> (n, x))
     f <*> x = Builder $ \ n ->
         let (n', g) = runBuilder f n
-        in fmap g $ runBuilder x n'
+        in g <$> runBuilder x n'
 
 instance Monad Builder where
     return = pure
@@ -85,19 +85,19 @@ inRange (a, b) = fmap (+ a) $ lessThan $ b + 1 - a
 
 -- | Returns a lower case letter.
 lower :: Builder Char
-lower = fmap (chr . (+ ord 'a')) $ lessThan 26
+lower = (chr . (+ ord 'a')) <$> lessThan 26
 
 -- | Returns an upper case letter.
 upper :: Builder Char
-upper = fmap (chr . (+ ord 'A')) $ lessThan 26
+upper = (chr . (+ ord 'A')) <$> lessThan 26
 
 -- | Returns an printable ascii char.
 ascii :: Builder Char
-ascii = fmap chr $ inRange (32, 126)
+ascii = chr <$> inRange (32, 126)
 
 -- | Returns a digit.
 digit :: Builder Char
-digit = fmap chr $ inRange (48, 57)
+digit = chr <$> inRange (48, 57)
 
 -- | Returns a letter.
 letter :: Builder Char

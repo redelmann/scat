@@ -15,6 +15,7 @@ module Scat.Schemas
     , getBuilder
 
     -- * Built-in schemas
+
     -- ** Passwords
     , safe
     , alphanumeric
@@ -36,6 +37,7 @@ import Data.List (intercalate, (\\))
 import Data.Vector (Vector)
 import qualified Data.Vector as V
 import Data.Monoid
+import Control.Applicative
 import Control.Monad (replicateM)
 import System.IO
 
@@ -165,7 +167,7 @@ androidPatternLock = withDefaultSize 9 $ \ s -> do
 {- | Generates a password with `s` of the original Pokemons and their level.
      Entropy of about 55.5 bits for 4 pokemons. -}
 pokemons :: IO Schema
-pokemons = fromFile "pokemons.txt" $ \ vect -> 
+pokemons = fromFile "pokemons.txt" $ \ vect ->
     withDefaultSize 4 $ \ s -> do
         ps <- replicateM s $ oneOfV vect
         ls <- replicateM s $ inRange (1, 100 :: Int)
@@ -186,5 +188,5 @@ fromFile :: FilePath -> (Vector String -> a) -> IO a
 fromFile fp bs = do
     fp' <- getDataFileName fp
     withFile fp' ReadMode $ \ h -> do
-        !vect <- fmap (V.fromList . lines) $ hGetContents h
+        !vect <- (V.fromList . lines) <$> hGetContents h
         return $ bs vect
