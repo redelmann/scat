@@ -3,7 +3,7 @@
 -- | Password scatterer.
 module Main (main) where
 
-import Data.ByteString (ByteString, unpack)
+import Data.ByteString (ByteString)
 import qualified Data.ByteString.Char8 as C
 import System.IO
 import System.Exit

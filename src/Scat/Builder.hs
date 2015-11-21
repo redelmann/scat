@@ -33,8 +33,6 @@ module Scat.Builder
     ) where
 
 import Data.Char (ord, chr)
-import Data.Monoid
-import Control.Applicative
 import Control.Monad
 import Control.Arrow (second)
 import Data.Vector (Vector)
