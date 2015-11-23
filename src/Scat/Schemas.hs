@@ -33,11 +33,10 @@ module Scat.Schemas
     ) where
 
 import Data.Ratio ((%))
+import Data.Monoid ((<>))
 import Data.List (intercalate, (\\))
 import Data.Vector (Vector)
 import qualified Data.Vector as V
-import Data.Monoid
-import Control.Applicative
 import Control.Monad (replicateM)
 import System.IO
 

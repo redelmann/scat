@@ -10,7 +10,7 @@ name:                scat
 -- PVP summary:      +-+------- breaking API changes
 --                   | | +----- non-breaking API additions
 --                   | | | +--- code changes with no API change
-version:             1.1.0.1
+version:             1.1.0.2
 
 -- A short (one-line) description of the package.
 synopsis:            Generates unique passwords for various websites from a single password.
@@ -70,9 +70,9 @@ executable scat
   build-depends:       base >=4.5 && <5
                      , scrypt == 0.5.*
                      , bytestring
-                     , optparse-applicative >= 0.5 && <0.10
+                     , optparse-applicative >= 0.5
                      , mtl
-                     , vector == 0.10.*
+                     , vector == 0.11.*
                      , ansi-terminal >= 0.6.1
 
 test-suite scat-tests
@@ -84,5 +84,5 @@ test-suite scat-tests
                      , bytestring
                      , optparse-applicative >= 0.5
                      , mtl
-                     , vector == 0.10.*
+                     , vector == 0.11.*
                      , ansi-terminal >= 0.6.1

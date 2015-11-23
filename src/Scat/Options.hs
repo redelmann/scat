@@ -84,7 +84,7 @@ options = Options
         <> metavar "SCHEMA"
         <> value "safe"
         <> showDefault)
-    <*> optional (option
+    <*> optional (option auto
           (short 'n'
         <> long "size"
         <> help "Size parameter"
