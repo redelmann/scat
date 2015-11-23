@@ -32,6 +32,7 @@ module Scat.Schemas
     , androidPatternLock
     ) where
 
+import Data.Functor ((<$>))
 import Data.Ratio ((%))
 import Data.Monoid ((<>))
 import Data.List (intercalate, (\\))
