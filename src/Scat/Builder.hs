@@ -71,9 +71,11 @@ instance Monad Builder where
         let (n', v) = runBuilder x n
         in runBuilder (f v) n'
 
+instance Semigroup a => Semigroup (Builder a) where
+    a <> b = (<>) <$> a <*> b
+
 instance Monoid a => Monoid (Builder a) where
     mempty = return mempty
-    mappend a b = mappend <$> a <*> b
 
 -- | Returns a positive integer less than `i`.
 lessThan :: Integral a => a -> Builder a
