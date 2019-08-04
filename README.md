@@ -92,7 +92,7 @@ Die 1 | Die 2 | Result |     | Die 1 | Die 2 | Result |     | Die 1 | Die 2 | Re
 2     | 5     | A      |     | 4     | 5     | M      |     | 6     | 5     | Y
 2     | 6     | B      |     | 4     | 6     | N      |     | 6     | 6     | Z
 
-Yet another solution would be to get a set of cards (a deck of 32 cards is sufficient). Shuffle it for some time, and then shuffle it again, just to be sure. Get a piece of paper and note down the order of the cards, using an abreviation for each card. For instance, you can use `KS` for for the King of Spades and `10H` for the 10 of Heart. You can now either keep the piece of paper securely with you, or keep your set of cards in the same order always in your bag and starting over when you need the code!
+Yet another solution would be to get a set of cards (a deck of 32 cards is sufficient). Shuffle it for some time, and then shuffle it again, just to be sure. Get a piece of paper and note down the order of the cards, using an abbreviation for each card. For instance, you can use `KS` for for the King of Spades and `10H` for the 10 of Heart. You can now either keep the piece of paper securely with you, or keep your set of cards in the same order always in your bag and starting over when you need the code!
 
 ### What if I lose my code?
 
