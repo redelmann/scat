@@ -72,7 +72,7 @@ executable scat
                      , bytestring
                      , optparse-applicative >= 0.5
                      , mtl
-                     , vector == 0.12.*
+                     , vector == 0.13.*
                      , ansi-terminal >= 0.6.1
 
 test-suite scat-tests
@@ -84,5 +84,5 @@ test-suite scat-tests
                      , bytestring
                      , optparse-applicative >= 0.5
                      , mtl
-                     , vector == 0.12.*
+                     , vector == 0.13.*
                      , ansi-terminal >= 0.6.1
